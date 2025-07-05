@@ -48,7 +48,7 @@ export const useAuth = (): UseAuthReturn => {
           });
         }
       } else {
-        handleChange("user", response?.user);
+        handleChange("user", (response as RecordWithAnyValue)?.user);
       }
       handleChange("isLoading", false);
     },
