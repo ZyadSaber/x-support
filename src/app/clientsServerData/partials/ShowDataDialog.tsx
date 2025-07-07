@@ -11,6 +11,7 @@ import {
 import Input from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import useFormManager from "@/hooks/useFormManager"
+import api from "@/lib/axios";
 import { RecordWithAnyValue } from "@/interfaces/global"
 import { modalTitle } from "../constants"
 
@@ -33,7 +34,9 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
             server_user_name,
             user_name_password,
             database_user_name,
-            database_password
+            database_password,
+            record_status,
+            id
         },
         handleInputChange
     } = useFormManager({
@@ -42,9 +45,27 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
 
     const showFiledData = type !== "S"
 
-    const handleSave = useCallback(() => {
-        runQuery()
-    }, [runQuery])
+
+    const handleSave = useCallback(async () => {
+        try {
+            await api.post("client_server/post_data", {
+                client_name,
+                server_name,
+                anydesk_number,
+                anydesk_password,
+                server_user_name,
+                user_name_password,
+                database_user_name,
+                database_password,
+                record_status,
+                id
+            });
+            handleClose()
+            runQuery()
+        } catch (err) {
+            console.log(err)
+        }
+    }, [anydesk_number, anydesk_password, client_name, database_password, database_user_name, handleClose, id, record_status, runQuery, server_name, server_user_name, user_name_password])
 
     return (
         <Dialog open={isOpen}>
@@ -86,7 +107,7 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                             <Input
                                 id="anydesk_password"
                                 disabled={!showFiledData}
-                                onChange={handleInputChange("anydesk_number")}
+                                onChange={handleInputChange("anydesk_password")}
                                 value={anydesk_password}
                             />
                         </div>
@@ -95,7 +116,7 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                             <Input
                                 id="server_user_name"
                                 disabled={!showFiledData}
-                                onChange={handleInputChange("anydesk_number")}
+                                onChange={handleInputChange("server_user_name")}
                                 value={server_user_name}
                             />
                         </div>
@@ -104,7 +125,7 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                             <Input
                                 id="user_name_password"
                                 disabled={!showFiledData}
-                                onChange={handleInputChange("anydesk_number")}
+                                onChange={handleInputChange("user_name_password")}
                                 value={user_name_password}
                             />
                         </div>
@@ -113,7 +134,7 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                             <Input
                                 id="database_user_name"
                                 disabled={!showFiledData}
-                                onChange={handleInputChange("anydesk_number")}
+                                onChange={handleInputChange("database_user_name")}
                                 value={database_user_name}
                             />
                         </div>
@@ -122,7 +143,7 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                             <Input
                                 id="database_password"
                                 disabled={!showFiledData}
-                                onChange={handleInputChange("anydesk_number")}
+                                onChange={handleInputChange("database_password")}
                                 value={database_password}
                             />
                         </div>

@@ -16,15 +16,16 @@ datasource db {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
-  user_name         String              @unique
-  password          String
-  name              String
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  last_login_time   DateTime?
-  user_role         String              @default("S")
-  ClientsServerData ClientsServerData[]
+  id              Int                 @id @default(autoincrement())
+  user_name       String              @unique
+  password        String
+  name            String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  last_login_time DateTime?
+  user_role       String              @default("S")
+  accessedServers ClientsServerData[] @relation("UserAccess")
+  updatedServers  ClientsServerData[] @relation("UserUpdated")
 }
 
 model ClientsServerData {
@@ -38,7 +39,9 @@ model ClientsServerData {
   database_user_name String?
   database_password  String?
   last_user_access   Int?
-  user               User?    @relation(fields: [last_user_access], references: [id])
+  user_updated_by    Int?
+  user               User?    @relation("UserAccess", fields: [last_user_access], references: [id])
+  updated_user       User?    @relation("UserUpdated", fields: [user_updated_by], references: [id])
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

@@ -5,26 +5,28 @@ import { getUserFromToken } from "@/lib/auth";
 export async function POST(request: NextRequest) {
   try {
     const user = await getUserFromToken();
-    const { user_name, password } = await request.json();
 
-    // Validate input
-    if (!user_name || !password) {
-      return NextResponse.json(
-        { error: "User name and password are required" },
-        { status: 400 }
-      );
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { id: userId } = user;
+
+    const { id } = await request.json();
+
+    await prisma.clientsServerData.update({
+      where: {
+        id,
+      },
+      data: {
+        last_user_access: userId,
+      },
+    });
 
     // Create response with cookie
     return NextResponse.json(
       {
-        message: "Login successful",
-        user: {
-          // id: user.id,
-          // user_name: user.user_name,
-          // name: user.name,
-          // last_login_time: updatedUser.last_login_time,
-        },
+        status: "success",
       },
       { status: 200 }
     );

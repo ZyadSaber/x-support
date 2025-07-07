@@ -14,6 +14,7 @@ const eslintConfig = [
     extends: ["next"],
     rules: {
       "*": "off",
+      "react-hooks/exhaustive-deps": "error",
     },
   }),
 ];

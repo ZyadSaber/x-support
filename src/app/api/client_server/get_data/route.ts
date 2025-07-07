@@ -15,6 +15,11 @@ export async function GET() {
     const responseData = await prisma.clientsServerData.findMany({
       where: {},
       include: {
+        updated_user: {
+          select: {
+            name: true,
+          },
+        },
         user: {
           select: {
             name: true,
@@ -37,8 +42,8 @@ export async function GET() {
         last_user_access,
         updatedAt,
         user,
+        updated_user,
       } = record;
-      const { name } = user || {};
       return {
         id,
         client_name,
@@ -51,7 +56,8 @@ export async function GET() {
         database_password,
         last_user_access,
         updated_at: format(updatedAt || new Date(), "yyyy-MM-dd hh:mm"),
-        last_user_access_name: name,
+        last_user_access_name: user?.name,
+        user_updated_by_name: updated_user?.name,
       };
     });
 

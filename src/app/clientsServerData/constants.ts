@@ -22,6 +22,10 @@ export const COLUMNS = [
     dataIndex: "last_user_access_name",
   },
   {
+    label: "Last updated by",
+    dataIndex: "user_updated_by_name",
+  },
+  {
     label: "Last Access At",
     dataIndex: "updated_at",
   },

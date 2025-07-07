@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, forwardRef, memo, useImperativeHandle } from "react"
 import { Button } from "@/components/ui/button";
 import {
     Table,
@@ -12,6 +12,11 @@ import useFetch from "@/hooks/useFetch";
 import { RecordWithAnyValue } from "@/interfaces/global";
 import { TableWithApiProps } from "./interface"
 
+// Define the interface for the table ref
+interface TableRef {
+    runQuery: (params: RecordWithAnyValue) => Promise<any>;
+}
+
 const TableWithApi = ({
     onClickOpen,
     AddButtonLabel,
@@ -22,7 +27,9 @@ const TableWithApi = ({
     handleEdit,
     handleDelete,
     actionButtons
-}: TableWithApiProps) => {
+}: TableWithApiProps,
+    ref?: React.ForwardedRef<TableRef>
+) => {
     const [dataSource, setDataSource] = useState<RecordWithAnyValue[]>([])
 
     const handleApiResponse = useCallback((data?: RecordWithAnyValue, error?: string | unknown) => {
@@ -32,12 +39,16 @@ const TableWithApi = ({
         setDataSource(data?.data || [])
     }, [])
 
-    const { isLoading } = useFetch({
+    const { isLoading, runQuery } = useFetch({
         endpoint: endPoint,
         params: tableParams,
         callOnFirstRender: callOnFirstRender,
         onResponse: handleApiResponse
     })
+
+    useImperativeHandle(ref, () => ({
+        runQuery,
+    }));
 
     return (
         <>
@@ -93,4 +104,5 @@ const TableWithApi = ({
     )
 }
 
-export default TableWithApi
+export default memo(forwardRef(TableWithApi))
+export { default as useTableFunctionFromRef } from "./hooks/useTableFunctionFromRef"

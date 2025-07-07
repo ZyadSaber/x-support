@@ -2,8 +2,9 @@
 
 import { memo, useCallback } from "react";
 import Image from "next/image";
+import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
-import { LogOut, Bell } from "lucide-react";
+import { LogOut, Bell, Link } from "lucide-react";
 import api from "@/lib/axios";
 import { ThemeToggle } from "@/components/themeToggle";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,12 +27,14 @@ const Header = ({ pageTitle }: HeaderTitleProps) => {
         <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    <div className="flex items-center space-x-4">
-                        <Image src="/logo.svg" alt="logo" width={40} height={40} />
-                        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                            {pageTitle}
-                        </h1>
-                    </div>
+                    <NextLink href="/home">
+                        <div className="flex items-center space-x-4">
+                            <Image src="/logo.svg" alt="logo" width={40} height={40} />
+                            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                                {pageTitle}
+                            </h1>
+                        </div>
+                    </NextLink>
                     <div className="flex items-center space-x-4">
                         <button className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
                             <Bell className="h-5 w-5" />
