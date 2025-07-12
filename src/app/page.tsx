@@ -3,15 +3,14 @@
 import { memo, useCallback, useState } from "react";
 import Image from "next/image";
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
-import { ThemeToggle } from "@/components/themeToggle";
+import { ThemeToggle } from "@/components/theme/themeToggle";
 import useFormManager from "@/hooks/useFormManager";
-import { useAuth } from "@/hooks/useAuth";
+import useAuth from "@/components/auth/hooks/useAuth";
 import api from "@/lib/axios";
 
 interface ErrorResponse {
@@ -19,9 +18,8 @@ interface ErrorResponse {
 }
 
 const HomePage = () => {
-  const { isLoading: authLoading, refetch } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const { refetch, disableLogin } = useAuth();
+  const [error, setError] = useState<string | null>(null)
 
   const {
     values: {
@@ -42,6 +40,8 @@ const HomePage = () => {
     }
   })
 
+  const fieldsDisabled = disableLogin || isLoading
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -51,9 +51,8 @@ const HomePage = () => {
       const endpoint = '/auth/login';
       const body = { user_name, password };
       await api.post(endpoint, body);
-      await refetch();
+      refetch();
       resetValues();
-      router.replace("/home");
     } catch (err) {
       const axiosError = err as AxiosError<ErrorResponse>;
       setError(
@@ -69,15 +68,6 @@ const HomePage = () => {
   const changeShowPassword = useCallback(() => {
     handleChange("showPassword", !showPassword)
   }, [handleChange, showPassword])
-
-  // Show loading state while checking authentication
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   // Show login form only
   return (
@@ -124,6 +114,7 @@ const HomePage = () => {
                     onChange={handleInputChange("user_name")}
                     className="pl-10 h-11 bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400"
                     required
+                    disabled={fieldsDisabled}
                   />
                 </div>
               </div>
@@ -143,11 +134,13 @@ const HomePage = () => {
                     onChange={handleInputChange("password")}
                     className="pl-10 pr-10 h-11 bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400"
                     required
+                    disabled={fieldsDisabled}
                   />
                   <button
                     type="button"
                     onClick={changeShowPassword}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    disabled={fieldsDisabled}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />

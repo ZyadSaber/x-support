@@ -5,11 +5,17 @@ import Link from "next/link";
 import { PcCase, User, TicketPlus, Ticket, ClipboardMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
+import useAuth from "@/components/auth/hooks/useAuth";
 import Header from "@/components/header";
 
 const HomePage = () => {
-    const { user } = useAuth();
+    const {
+        name,
+        user_name,
+        id,
+        user_role,
+        last_login_time
+    } = useAuth();
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -20,7 +26,7 @@ const HomePage = () => {
                 {/* Welcome Section */}
                 <div className="mb-8">
                     <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                        Welcome back, {user?.name}! 👋
+                        Welcome back, {name}! 👋
                     </h2>
                     <p className="text-slate-600 dark:text-slate-400">
                         Here&apos;s what&apos;s happening with your account today.
@@ -40,11 +46,11 @@ const HomePage = () => {
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">Full Name</span>
-                                    <span className="text-slate-900 dark:text-slate-100">{user?.name}</span>
+                                    <span className="text-slate-900 dark:text-slate-100">{name}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">User Data</span>
-                                    <span className="text-slate-900 dark:text-slate-100">{`${user?.user_name} - ${user?.id}`}</span>
+                                    <span className="text-slate-900 dark:text-slate-100">{`${user_name} - ${id}`}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">Login Status</span>
@@ -54,11 +60,11 @@ const HomePage = () => {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">Account Type</span>
-                                    <span className="text-slate-900 dark:text-slate-100">{user?.user_role}</span>
+                                    <span className="text-slate-900 dark:text-slate-100">{user_role}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">Last Login</span>
-                                    <span className="text-slate-900 dark:text-slate-100">{user?.last_login_time}</span>
+                                    <span className="text-slate-900 dark:text-slate-100">{last_login_time}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -76,7 +82,7 @@ const HomePage = () => {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">Current Tickets</span>
-                                    <span className="text-slate-900 dark:text-slate-100">0</span>
+                                    <span className="text-slate-900 dark:text-slate-100">3</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-600 dark:text-slate-400">Other Tickets</span>

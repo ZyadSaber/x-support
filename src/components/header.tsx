@@ -6,8 +6,8 @@ import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
 import { LogOut, Bell, Link } from "lucide-react";
 import api from "@/lib/axios";
-import { ThemeToggle } from "@/components/themeToggle";
-import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/theme/themeToggle";
+import useAuth from "@/components/auth/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 interface HeaderTitleProps {

@@ -86,7 +86,7 @@ Send a POST request to `/api/auth/login` with:
 ### Using the useAuth Hook
 
 ```tsx
-import { useAuth } from "@/hooks/useAuth";
+import useAuth from "@/components/auth/hooks/useAuth";
 
 const MyComponent = () => {
   const { user, isLoading, error, refetch } = useAuth();
