@@ -16,16 +16,24 @@ datasource db {
 }
 
 model User {
-  id              Int                 @id @default(autoincrement())
-  user_name       String              @unique
+  id              Int       @id @default(autoincrement())
+  user_name       String    @unique
   password        String
   name            String
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   last_login_time DateTime?
-  user_role       String              @default("S")
+  user_role       String    @default("S")
+
+  user_disabled Boolean @default(false)
+
   accessedServers ClientsServerData[] @relation("UserAccess")
   updatedServers  ClientsServerData[] @relation("UserUpdated")
+
+  submitted_tickets  TicketsData[] @relation("SubmittedTickets")
+  support_tickets    TicketsData[] @relation("SupportTickets")
+  web_dev_tickets    TicketsData[] @relation("WebDevTickets")
+  oracle_dev_tickets TicketsData[] @relation("OracleDevTickets")
 }
 
 model ClientsServerData {
@@ -44,4 +52,26 @@ model ClientsServerData {
   updated_user       User?    @relation("UserUpdated", fields: [user_updated_by], references: [id])
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+}
+
+model TicketsData {
+  ticket_id          String    @id
+  ticket_name        String
+  ticket_description String
+  ticket_date        DateTime  @default(now())
+  ticket_end_date    DateTime?
+  ticket_file        String?
+
+  submitted_by     Int
+  support_agent    Int?
+  web_developer    Int?
+  oracle_developer Int?
+
+  submitted_user     User? @relation("SubmittedTickets", fields: [submitted_by], references: [id])
+  support_agent_user User? @relation("SupportTickets", fields: [support_agent], references: [id])
+  web_dev_user       User? @relation("WebDevTickets", fields: [web_developer], references: [id])
+  oracle_dev_user    User? @relation("OracleDevTickets", fields: [oracle_developer], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

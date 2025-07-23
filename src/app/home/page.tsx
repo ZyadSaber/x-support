@@ -142,7 +142,7 @@ const HomePage = () => {
                                         Current Tickets
                                     </Button>
                                 </Link>
-                                <Link href="#">
+                                <Link href="tickets">
                                     <Button variant="outline" className="h-12 w-full cursor-pointer">
                                         <Ticket className="h-4 w-4 mr-2" />
                                         All Tickets
