@@ -6,47 +6,38 @@ export const modalTitle = {
 
 export const COLUMNS = [
   {
-    label: "ticket_id",
+    label: "Ticket id",
     dataIndex: "ticket_id",
   },
   {
-    label: "ticket_date",
+    label: "Ticket date",
     dataIndex: "ticket_date",
   },
   {
-    label: "ticket_end_date",
+    label: "Ticket end date",
     dataIndex: "ticket_end_date",
   },
   {
-    label: "ticket_name",
+    label: "Client name",
+    dataIndex: "client_name",
+  },
+  {
+    label: "Ticket name",
     dataIndex: "ticket_name",
   },
   {
-    label: "ticket_description",
-    dataIndex: "ticket_description",
-  },
-  {
-    label: "submitted_by_name",
+    label: "Submitted by",
     dataIndex: "submitted_by_name",
   },
+];
+
+export const statusOptions = [
   {
-    label: "support_agent_name",
-    dataIndex: "support_agent_name",
+    label: "Open",
+    key: "O",
   },
   {
-    label: "web_developer_name",
-    dataIndex: "web_developer_name",
-  },
-  {
-    label: "oracle_developer_name",
-    dataIndex: "oracle_developer_name",
-  },
-  {
-    label: "created_at",
-    dataIndex: "created_at",
-  },
-  {
-    label: "updated_at",
-    dataIndex: "updated_at",
+    label: "Closed",
+    key: "C",
   },
 ];

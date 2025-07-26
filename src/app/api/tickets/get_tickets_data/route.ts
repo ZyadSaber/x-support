@@ -1,19 +1,34 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getUserFromToken } from "@/lib/auth";
+import { getStatusName } from "@/lib/getStatusName";
+import getRouteParams from "@/lib/getRouteParams";
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const user = await getUserFromToken();
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const { date_from, date_to, client_name, ticket_id, ticket_status } =
+      getRouteParams(request);
 
-    // Fetch last_login_time from DB
     const responseData = await prisma.ticketsData.findMany({
-      where: {},
+      where: {
+        ticket_status,
+        client_name: {
+          contains: client_name,
+        },
+        ticket_id: {
+          contains: ticket_id,
+        },
+        ticket_date: {
+          gte: new Date(date_from),
+          lte: new Date(date_to),
+        },
+      },
       include: {
         submitted_user: {
           select: {
@@ -56,6 +71,8 @@ export async function GET() {
         support_agent_user,
         web_dev_user,
         oracle_dev_user,
+        client_name,
+        ticket_status,
       } = record;
       return {
         ticket_id,
@@ -76,6 +93,9 @@ export async function GET() {
         web_developer_name: web_dev_user?.name,
         oracle_developer,
         oracle_developer_name: oracle_dev_user?.name,
+        client_name,
+        ticket_status,
+        ticket_status_name: getStatusName(ticket_status),
       };
     });
 

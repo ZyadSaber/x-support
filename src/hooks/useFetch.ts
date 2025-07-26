@@ -32,7 +32,11 @@ function useFetch<T = unknown>({
     try {
       setIsLoading(true);
       const config: AxiosRequestConfig = { withCredentials: true };
-      if (params) config.params = params;
+      if (_params) {
+        config.params = _params;
+      } else if (params) {
+        config.params = params;
+      }
       const response = await axios.get<T>(`/api/${endpoint}`, config);
       handler?.(response.data, undefined);
       onResponse?.(response?.data, undefined);

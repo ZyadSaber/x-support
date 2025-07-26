@@ -42,7 +42,6 @@ const AuthProvider = ({
 
     const handleUserResponse = useCallback(
         (response: RecordWithAnyValue | unknown, error: unknown) => {
-            console.log(response)
             if (error) {
                 const axiosError = error as AxiosError;
                 if (axiosError.response?.status === 401) {

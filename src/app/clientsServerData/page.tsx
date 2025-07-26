@@ -23,7 +23,6 @@ const ClientsServerDataPage = () => {
         handleChangeMultiInputs
     } = useFormManager({
         initialValues: {
-            data: [],
             selectedRecord: {},
             type: "S"
         }
@@ -91,6 +90,7 @@ const ClientsServerDataPage = () => {
             <Header pageTitle="Client Server Data" />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <TableWithApi
+                    rowKey="id"
                     ref={tableValuesRef}
                     onClickOpen={handleShowItem("N")}
                     AddButtonLabel="Add New Server"

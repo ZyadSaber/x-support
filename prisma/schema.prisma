@@ -61,6 +61,9 @@ model TicketsData {
   ticket_date        DateTime  @default(now())
   ticket_end_date    DateTime?
   ticket_file        String?
+  client_name        String?   @default("")
+
+  ticket_status String @default("O")
 
   submitted_by     Int
   support_agent    Int?

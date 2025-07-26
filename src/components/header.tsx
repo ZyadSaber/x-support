@@ -4,7 +4,7 @@ import { memo, useCallback } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 import { Button } from "@/components/ui/button";
-import { LogOut, Bell, Link } from "lucide-react";
+import { LogOut, Bell } from "lucide-react";
 import api from "@/lib/axios";
 import { ThemeToggle } from "@/components/theme/themeToggle";
 import useAuth from "@/components/auth/hooks/useAuth";
@@ -23,6 +23,7 @@ const Header = ({ pageTitle }: HeaderTitleProps) => {
         refetchAuth();
         router.push('/');
     }, [refetchAuth, router])
+
     return (
         <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
