@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import usePrevious from "./usePrevious";
 import { RecordWithAnyValue } from "@/interfaces/global";
@@ -22,8 +22,9 @@ function useFetch<T = unknown>({
   callOnFirstRender = false,
   onResponse,
 }: UseFetchProps) {
-  const prevParams = usePrevious(params);
   const [isLoading, setIsLoading] = useState(false);
+  const lastParamsRef = useRef<RecordWithAnyValue | undefined>(params);
+  const prevParams = usePrevious(lastParamsRef.current);
 
   const runQuery = async (
     _params?: RecordWithAnyValue,
@@ -32,10 +33,11 @@ function useFetch<T = unknown>({
     try {
       setIsLoading(true);
       const config: AxiosRequestConfig = { withCredentials: true };
-      if (_params) {
-        config.params = _params;
-      } else if (params) {
-        config.params = params;
+      // Merge params from props and _params, with _params taking precedence
+      const mergedParams = { ...(params || {}), ...(_params || {}) };
+      if (Object.keys(mergedParams).length > 0) {
+        config.params = mergedParams;
+        lastParamsRef.current = mergedParams;
       }
       const response = await axios.get<T>(`/api/${endpoint}`, config);
       handler?.(response.data, undefined);
@@ -58,7 +60,7 @@ function useFetch<T = unknown>({
   useEffect(() => {
     if (!disableParamsCheck && callOnFirstRender) {
       const paramsChanged =
-        JSON.stringify(prevParams) !== JSON.stringify(params);
+        JSON.stringify(prevParams) !== JSON.stringify(lastParamsRef.current);
       if (paramsChanged) {
         runQuery();
       }

@@ -1,7 +1,17 @@
+import getCustomDateRange from "@/lib/getCustomDateRange";
+
 export const modalTitle = {
-  S: "Show data",
-  U: "Update data",
-  N: "Add new data",
+  N: "Add new ticket",
+  U: "Edit ticket",
+};
+
+export const initialValues = {
+  selectedRecord: {},
+  type: "S",
+  ticket_id: "",
+  date: getCustomDateRange(),
+  client_name: "",
+  ticket_status: "O",
 };
 
 export const COLUMNS = [

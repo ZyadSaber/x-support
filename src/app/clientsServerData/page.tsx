@@ -7,7 +7,7 @@ import useOpenStatus from "@/hooks/useOpenStatus"
 import { RecordWithAnyValue } from "@/interfaces/global";
 import TableWithApi, { useTableFunctionFromRef } from "@/components/table-with-api";
 import api from "@/lib/axios";
-import ShowDataDialog from "./partials/ShowDataDialog"
+import ShowDataDialog from "./_partials/ShowDataDialog"
 import { COLUMNS } from "./constants"
 
 const ClientsServerDataPage = () => {

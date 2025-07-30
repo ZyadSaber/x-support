@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { AxiosError } from "axios";
 import useFormManager from "@/hooks/useFormManager";
 import useFetch from "@/hooks/useFetch";
+import LoadingSpinner from "@/components/loading-spinner"
 import { RecordWithAnyValue } from "@/interfaces/global";
 import { AuthProviderContext } from "./constants"
 import { AuthProviderProps } from "./interface"
@@ -82,7 +83,7 @@ const AuthProvider = ({
     if (authLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                <LoadingSpinner />
             </div>
         );
     }

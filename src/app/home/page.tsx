@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import Link from "next/link";
-import { PcCase, User, TicketPlus, Ticket, ClipboardMinus } from "lucide-react";
+import { PcCase, User, TicketPlus, Ticket, ClipboardMinus, BookUser, CircleUserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import useAuth from "@/components/auth/hooks/useAuth";
@@ -21,9 +21,7 @@ const HomePage = () => {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
 
             <Header pageTitle="X-Support Dashboard" />
-            {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Welcome Section */}
                 <div className="mb-8">
                     <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                         Welcome back, {name}! 👋
@@ -33,7 +31,6 @@ const HomePage = () => {
                     </p>
                 </div>
 
-                {/* User Info Card */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     <Card className="shadow-xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
                         <CardHeader>
@@ -119,45 +116,54 @@ const HomePage = () => {
                     </Card>
                 </div>
 
-                {/* Dashboard Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <Card className="shadow-xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-                        <CardHeader>
-                            <CardTitle>Common Links</CardTitle>
-                            <CardDescription>
-                                Common tasks and shortcuts
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-2 gap-4">
-                                <Link href="/clientsServerData">
-                                    <Button variant="outline" className="h-12 w-full cursor-pointer">
-                                        <PcCase className="h-4 w-4 mr-2" />
-                                        Clients Server Data
-                                    </Button>
-                                </Link>
-                                <Link href="#">
-                                    <Button variant="outline" className="h-12 w-full cursor-pointer">
-                                        <TicketPlus className="h-4 w-4 mr-2" />
-                                        Current Tickets
-                                    </Button>
-                                </Link>
-                                <Link href="tickets">
-                                    <Button variant="outline" className="h-12 w-full cursor-pointer">
-                                        <Ticket className="h-4 w-4 mr-2" />
-                                        All Tickets
-                                    </Button>
-                                </Link>
-                                <Link href="#">
-                                    <Button variant="outline" className="h-12 w-full cursor-pointer">
-                                        <ClipboardMinus className="h-4 w-4 mr-2" />
-                                        Tickets Report
-                                    </Button>
-                                </Link>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                <Card className="shadow-xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+                    <CardHeader>
+                        <CardTitle>Common Links</CardTitle>
+                        <CardDescription>
+                            Common tasks and shortcuts
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-4 gap-4">
+                            <Link href="/clientsServerData">
+                                <Button variant="outline" className="h-12 w-full cursor-pointer">
+                                    <PcCase className="h-4 w-4 mr-2" />
+                                    Clients Server Data
+                                </Button>
+                            </Link>
+                            <Link href="tickets">
+                                <Button variant="outline" className="h-12 w-full cursor-pointer">
+                                    <Ticket className="h-4 w-4 mr-2" />
+                                    All Tickets
+                                </Button>
+                            </Link>
+                            <Link href={`tickets/${id}`}>
+                                <Button variant="outline" className="h-12 w-full cursor-pointer">
+                                    <TicketPlus className="h-4 w-4 mr-2" />
+                                    Current Tickets
+                                </Button>
+                            </Link>
+                            <Link href="tickets/reports">
+                                <Button variant="outline" className="h-12 w-full cursor-pointer">
+                                    <ClipboardMinus className="h-4 w-4 mr-2" />
+                                    Tickets Report
+                                </Button>
+                            </Link>
+                            <Link href="users">
+                                <Button variant="outline" className="h-12 w-full cursor-pointer">
+                                    <CircleUserRound className="h-4 w-4 mr-2" />
+                                    Users
+                                </Button>
+                            </Link>
+                            <Link href="customers">
+                                <Button variant="outline" className="h-12 w-full cursor-pointer">
+                                    <BookUser className="h-4 w-4 mr-2" />
+                                    Customers
+                                </Button>
+                            </Link>
+                        </div>
+                    </CardContent>
+                </Card>
             </main>
         </div>
     );

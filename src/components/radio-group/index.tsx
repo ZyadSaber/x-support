@@ -28,19 +28,17 @@ const RadioGroupButton = ({
     }, [name, onChange])
 
     return (
-        <>
-            <RadioGroup className="flex items-center">
-                <Label htmlFor="option-one" className="text-[18px]">{`${label}:`}</Label>
-                {
-                    options.map(({ label, key }, index) => (
-                        <div key={index} className="flex items-center space-x-2" onClick={handleChange}>
-                            <RadioGroupItem value={key} id="option-one" checked={value === key} />
-                            <Label htmlFor="option-one">{label}</Label>
-                        </div>
-                    ))
-                }
-            </RadioGroup>
-        </>
+        <RadioGroup className="flex items-center mb-1.5">
+            <Label htmlFor="option-one" className="text-[18px]">{`${label}:`}</Label>
+            {
+                options.map(({ label, key }, index) => (
+                    <div key={index} className="flex items-center space-x-2" onClick={handleChange}>
+                        <RadioGroupItem value={key} id="option-one" checked={value === key} />
+                        <Label htmlFor="option-one">{label}</Label>
+                    </div>
+                ))
+            }
+        </RadioGroup>
     )
 }
 
