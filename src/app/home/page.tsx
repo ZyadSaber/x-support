@@ -155,10 +155,10 @@ const HomePage = () => {
                                     Users
                                 </Button>
                             </Link>
-                            <Link href="customers">
+                            <Link href="clients">
                                 <Button variant="outline" className="h-12 w-full cursor-pointer">
                                     <BookUser className="h-4 w-4 mr-2" />
-                                    Customers
+                                    Clients
                                 </Button>
                             </Link>
                         </div>

@@ -1,27 +1,19 @@
-import { memo, useCallback } from "react"
-import Input from "@/components/ui/input"
+import { useCallback } from "react"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
-interface InputTextProps {
+interface TextAreaViewProps {
     name?: string;
     value: string;
     onChange?: (name: string, value: string) => void;
     disabled?: boolean;
     label?: string;
     className?: string;
-    type?: string
+    minHeight?: string
 }
 
-const InputText = ({
-    name,
-    value,
-    onChange,
-    disabled,
-    label,
-    className,
-    type
-}: InputTextProps) => {
+const TextAreaView = ({ name, value, onChange, disabled, label, className, minHeight }: TextAreaViewProps) => {
 
     const handleChange = useCallback(event => {
         onChange(name, event?.target?.value)
@@ -33,15 +25,18 @@ const InputText = ({
             className
         )}>
             <Label htmlFor={name}>{label}</Label>
-            <Input
-                id={name}
-                value={value}
-                onChange={handleChange}
+            <Textarea
+                name={name}
                 disabled={disabled}
-                type={type}
+                value={value}
+                className="h-full"
+                onChange={handleChange}
+                style={{
+                    minHeight: minHeight
+                }}
             />
         </div>
     )
 }
 
-export default memo(InputText)
+export default TextAreaView

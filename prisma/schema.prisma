@@ -37,8 +37,8 @@ model User {
 }
 
 model ClientsServerData {
-  id                 Int      @id @default(autoincrement())
-  client_name        String?
+  id                 Int           @id @default(autoincrement())
+  client_id          Int?
   server_name        String?
   anydesk_number     String?
   anydesk_password   String?
@@ -48,10 +48,11 @@ model ClientsServerData {
   database_password  String?
   last_user_access   Int?
   user_updated_by    Int?
-  user               User?    @relation("UserAccess", fields: [last_user_access], references: [id])
-  updated_user       User?    @relation("UserUpdated", fields: [user_updated_by], references: [id])
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  user               User?         @relation("UserAccess", fields: [last_user_access], references: [id])
+  updated_user       User?         @relation("UserUpdated", fields: [user_updated_by], references: [id])
+  client             clients_data? @relation(fields: [client_id], references: [client_id])
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 }
 
 model TicketsData {
@@ -61,7 +62,7 @@ model TicketsData {
   ticket_date        DateTime  @default(now())
   ticket_end_date    DateTime?
   ticket_file        String?
-  client_name        String?   @default("")
+  client_id          Int?
 
   ticket_status String @default("O")
 
@@ -70,11 +71,24 @@ model TicketsData {
   web_developer    Int?
   oracle_developer Int?
 
-  submitted_user     User? @relation("SubmittedTickets", fields: [submitted_by], references: [id])
-  support_agent_user User? @relation("SupportTickets", fields: [support_agent], references: [id])
-  web_dev_user       User? @relation("WebDevTickets", fields: [web_developer], references: [id])
-  oracle_dev_user    User? @relation("OracleDevTickets", fields: [oracle_developer], references: [id])
+  submitted_user     User?         @relation("SubmittedTickets", fields: [submitted_by], references: [id])
+  support_agent_user User?         @relation("SupportTickets", fields: [support_agent], references: [id])
+  web_dev_user       User?         @relation("WebDevTickets", fields: [web_developer], references: [id])
+  oracle_dev_user    User?         @relation("OracleDevTickets", fields: [oracle_developer], references: [id])
+  client             clients_data? @relation(fields: [client_id], references: [client_id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model clients_data {
+  client_id       Int     @id @default(autoincrement())
+  client_name     String
+  client_location String?
+  client_phone    String?
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  ClientsServerData ClientsServerData[]
+  TicketsData       TicketsData[]
 }

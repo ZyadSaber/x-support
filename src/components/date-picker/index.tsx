@@ -2,45 +2,62 @@
 
 import { memo, useCallback, useState } from "react"
 import { ChevronDownIcon } from "lucide-react"
-
+import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-const DatePicker = () => {
+interface DatePickerProps {
+    showTime?: boolean;
+    onChange?: (name: string, value: string) => void;
+    value: string;
+    name: string;
+    label: string;
+    className?: string
+    disabled?: boolean
+}
+
+const DatePicker = ({ value, onChange, name, label, className, disabled }: DatePickerProps) => {
     const [open, setOpen] = useState(false)
 
+    const handleChange = useCallback((date: Date) => {
+        onChange?.(name, format(date, "yyyy-MM-dd"))
+    }, [name, onChange])
+
     return (
-        <div className="flex flex-col gap-3">
+        <div className={cn(
+            "flex flex-col gap-3",
+            className
+        )}>
             <Label htmlFor="date" className="px-1">
-                Date of birth
+                {label}
             </Label>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
                         id="date"
-                        className="w-48 justify-between font-normal"
+                        className="w-full justify-between font-normal"
+                        disabled={disabled}
                     >
-                        {/* {date ? date.toLocaleDateString() : "Select date"} */}
-                        23-08-2025
+                        <span>
+                            {value}
+                        </span>
                         <ChevronDownIcon />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                         mode="single"
-                        // selected={date}
+                        selected={new Date(value)}
                         captionLayout="dropdown"
-                    // onSelect={(date) => {
-                    //     setDate(date)
-                    //     setOpen(false)
-                    // }}
+                        onSelect={handleChange}
                     />
                 </PopoverContent>
             </Popover>

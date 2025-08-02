@@ -3,8 +3,7 @@
 import { useCallback, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { ChevronDownIcon } from "lucide-react";
-import useFormManager from "@/hooks/useFormManager";
-import { format, getHours } from "date-fns"
+import { format } from "date-fns"
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -82,7 +81,7 @@ const DatePickerRange = ({
           <Button
             variant="outline"
             id="date"
-            className="w-64 justify-between font-normal transition-shadow focus:ring-2 focus:ring-primary/50 hover:shadow-md"
+            className="w-64 justify-between font-normal transition-shadow focus:ring-2 focus:ring-primary/50 hover:shadow-md bg-white dark:bg-slate-900/60"
             aria-label="Select date range"
           >
             <span>{formatRange(computeValue)}</span>

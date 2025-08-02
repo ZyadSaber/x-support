@@ -1,12 +1,16 @@
 import { memo, useCallback } from "react"
-import Input from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import TextAreaView from "@/components/text-area";
 import useFormManager from "@/hooks/useFormManager"
 import api from "@/lib/axios";
 import { RecordWithAnyValue } from "@/interfaces/global"
-import { modalTitle } from "../constants"
+import QuerySelect from "@/components/query-select"
+import { modalTitle, statusOptions } from "../constants"
 import Modal from "@/components/modal"
 import InputText from "@/components/input-text"
+import RadioGroupButton from "@/components/radio-group";
+import DatePicker from "@/components/date-picker";
+import useAuth from "@/components/auth/hooks/useAuth";
+import getCurrentDate from "@/lib/getCurrentDate";
 
 interface ModalViewProps {
     selectedRecord: RecordWithAnyValue;
@@ -17,47 +21,56 @@ interface ModalViewProps {
 }
 
 const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: ModalViewProps) => {
-
+    const { id: userId } = useAuth();
     const {
         values: {
+            ticket_id,
             ticket_name,
-            server_name,
-            anydesk_number,
-            anydesk_password,
-            server_user_name,
-            user_name_password,
-            database_user_name,
-            database_password,
-            record_status,
-            id
+            ticket_status,
+            client_id,
+            ticket_date,
+            ticket_end_date,
+            ticket_description,
+            submitted_by,
+            support_agent,
+            web_developer,
+            oracle_developer,
+            files,
+            record_status
         },
-        handleInputChange,
         handleChange
     } = useFormManager({
-        initialValues: selectedRecord
+        initialValues: {
+            ticket_status: "O",
+            ticket_date: getCurrentDate(),
+            submitted_by: userId,
+            ...selectedRecord,
+        }
     })
-
 
     const handleSave = useCallback(async () => {
         try {
             await api.post("client_server/post_data", {
+                ticket_id,
                 ticket_name,
-                server_name,
-                anydesk_number,
-                anydesk_password,
-                server_user_name,
-                user_name_password,
-                database_user_name,
-                database_password,
-                record_status,
-                id
+                ticket_status,
+                client_id,
+                ticket_date,
+                ticket_end_date,
+                ticket_description,
+                submitted_by,
+                support_agent,
+                web_developer,
+                oracle_developer,
+                files,
+                record_status
             });
             handleClose()
             runQuery()
         } catch (err) {
             console.log(err)
         }
-    }, [anydesk_number, anydesk_password, database_password, database_user_name, handleClose, id, record_status, runQuery, server_name, server_user_name, ticket_name, user_name_password])
+    }, [client_id, files, handleClose, oracle_developer, record_status, runQuery, submitted_by, support_agent, ticket_date, ticket_description, ticket_end_date, ticket_id, ticket_name, ticket_status, web_developer])
 
     return (
         <Modal
@@ -66,70 +79,94 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
             title={modalTitle[type]}
             handleSave={handleSave}
         >
-            <div className="gap-4 mt-2 mb-2 flex flex-wrap justify-between">
+            <div className="gap-4 mt-2 mb-2 flex flex-wrap items-end">
                 <InputText
                     name="ticket_name"
                     value={ticket_name}
                     onChange={handleChange}
                     label="Ticket name"
-                    className="w-[40%]"
+                    className="w-[33%]"
                 />
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="server_name">Server name</Label>
-                    <Input
-                        id="server_name"
-                        value={server_name}
-                        onChange={handleInputChange("server_name")}
-                    />
-                </div>
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="anydesk_number">AnyDesk number</Label>
-                    <Input
-                        id="anydesk_number"
-                        value={anydesk_number}
-                        onChange={handleInputChange("anydesk_number")}
-                    />
-                </div>
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="anydesk_password">AnyDesk Password</Label>
-                    <Input
-                        id="anydesk_password"
-                        onChange={handleInputChange("anydesk_password")}
-                        value={anydesk_password}
-                    />
-                </div>
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="server_user_name">Server user name</Label>
-                    <Input
-                        id="server_user_name"
-                        onChange={handleInputChange("server_user_name")}
-                        value={server_user_name}
-                    />
-                </div>
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="user_name_password">Server password</Label>
-                    <Input
-                        id="user_name_password"
-                        onChange={handleInputChange("user_name_password")}
-                        value={user_name_password}
-                    />
-                </div>
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="database_user_name">Database user name</Label>
-                    <Input
-                        id="database_user_name"
-                        onChange={handleInputChange("database_user_name")}
-                        value={database_user_name}
-                    />
-                </div>
-                <div className="grid gap-3 w-[48%]">
-                    <Label htmlFor="database_password">Database password</Label>
-                    <Input
-                        id="database_password"
-                        onChange={handleInputChange("database_password")}
-                        value={database_password}
-                    />
-                </div>
+                <QuerySelect
+                    label="Client"
+                    name="client_id"
+                    className="w-[33%]"
+                    endPoint="clients/get_clients_list"
+                    value={client_id}
+                    onChange={handleChange}
+                />
+                <RadioGroupButton
+                    options={statusOptions}
+                    name="ticket_status"
+                    value={ticket_status}
+                    onChange={handleChange}
+                    label="Ticket status"
+                />
+                <QuerySelect
+                    label="Submitted by"
+                    name="submitted_by"
+                    className="w-[23.5%]"
+                    endPoint="users/get_users_list"
+                    value={submitted_by}
+                    onChange={handleChange}
+                    disabled
+                />
+                <QuerySelect
+                    label="Support agent"
+                    name="support_agent"
+                    className="w-[23.5%]"
+                    endPoint="users/get_users_list"
+                    value={support_agent}
+                    onChange={handleChange}
+                />
+                <QuerySelect
+                    label="Web developer"
+                    name="web_developer"
+                    className="w-[23.5%]"
+                    endPoint="users/get_users_list"
+                    value={web_developer}
+                    onChange={handleChange}
+                />
+                <QuerySelect
+                    label="Oracle developer"
+                    name="oracle_developer"
+                    className="w-[23.5%]"
+                    endPoint="users/get_users_list"
+                    value={oracle_developer}
+                    onChange={handleChange}
+                />
+                <DatePicker
+                    name="ticket_date"
+                    value={ticket_date}
+                    label="Ticket Date"
+                    onChange={handleChange}
+                    className="w-[23.5%]"
+                />
+                <DatePicker
+                    name="ticket_end_date"
+                    value={ticket_end_date}
+                    label="Ticket end Date"
+                    onChange={handleChange}
+                    className="w-[23.5%]"
+                    disabled={ticket_status !== "C"}
+                />
+                <InputText
+                    className="w-[48%]"
+                    label="Upload Files"
+                    value={files}
+                    name="files"
+                    onChange={handleChange}
+                    type="file"
+                    disabled
+                />
+                <TextAreaView
+                    value={ticket_description}
+                    name="ticket_description"
+                    onChange={handleChange}
+                    className="w-full"
+                    label="Ticket description"
+                    minHeight="120px"
+                />
             </div>
         </Modal>
     )

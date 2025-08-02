@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { date_from, date_to, client_name, ticket_id, ticket_status, id } =
+    const { date_from, date_to, client_id, ticket_id, ticket_status, id } =
       getRouteParams(request);
 
     if (!date_from || !date_to) {
@@ -29,19 +29,25 @@ export async function GET(request: NextRequest) {
       where.support_agent = +id;
     }
 
+    if (client_id) {
+      where.client_id = +client_id;
+    }
+
     const responseData = await prisma.ticketsData.findMany({
       where: {
         ...where,
         ticket_status,
-        client_name: {
-          contains: client_name,
-        },
         ticket_id: {
           contains: ticket_id,
         },
         ticket_date: getParamDateRange(date_from, date_to),
       },
       include: {
+        client: {
+          select: {
+            client_name: true,
+          },
+        },
         submitted_user: {
           select: {
             name: true,
@@ -83,8 +89,9 @@ export async function GET(request: NextRequest) {
         support_agent_user,
         web_dev_user,
         oracle_dev_user,
-        client_name,
+        client_id,
         ticket_status,
+        client,
       } = record;
       return {
         ticket_id,
@@ -105,7 +112,8 @@ export async function GET(request: NextRequest) {
         web_developer_name: web_dev_user?.name,
         oracle_developer,
         oracle_developer_name: oracle_dev_user?.name,
-        client_name,
+        client_id,
+        client_name: client?.client_name,
         ticket_status,
         ticket_status_name: getStatusName(ticket_status),
       };

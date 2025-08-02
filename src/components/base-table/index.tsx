@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useCallback, memo, Fragment } from "react"
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { useState, useCallback, useMemo, Fragment } from "react"
+import { ChevronRight, ChevronDown, Expand } from "lucide-react";
 import {
     Table,
     TableHeader,
@@ -14,6 +14,8 @@ import LoadingSpinner from "@/components/loading-spinner"
 import { Button } from "@/components/ui/button";
 import { RecordWithAnyValue } from "@/interfaces/global";
 import { BaseTableProps } from "./interface"
+import generateFixedColumns from "./helpers/generateFixedColumns";
+import useBoundingClientRef from "./hooks/useBoundingClientRef";
 
 const BaseTable = ({
     AddButtonLabel,
@@ -43,32 +45,55 @@ const BaseTable = ({
     }, []);
 
     const isOpen = expanded.has(rowKey);
+    const [ref, rect] = useBoundingClientRef();
+
+    const showExpandColumn = !!renderExpanded;
+    // const showActionColumn = !!onPressActionIcon;
+    const containerWidthNumber = rect?.width ?? 200
+
+    const adjustedColumns = useMemo(
+        () =>
+            generateFixedColumns({
+                containerWidthNumber,
+                columnsFromProps: columns,
+                showExpandColumn,
+            }) || [],
+        [containerWidthNumber, columns, showExpandColumn],
+    );
 
     return (
         <>
-            <div className="w-full text-center">
+            <div className="w-full text-center" ref={ref}>
                 <Button className="p-2 cursor-pointer" variant="default" onClick={onClickOpen} disabled={isLoading}>
                     {AddButtonLabel}
                 </Button>
             </div>
             <div className="rounded-lg overflow-x-auto border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 shadow-2xl mt-8">
-                <Table>
+                <Table className="table-fixed">
                     <TableHeader>
                         <TableRow className="backdrop-blur-md bg-white/70 dark:bg-slate-900/70 sticky top-0 z-10">
-                            {renderExpanded && <TableHead />}
-                            {columns.map((col, index) => (
-                                <TableHead key={index}>{col.label}</TableHead>
+                            {renderExpanded &&
+                                <TableHead className="w-[50px]" >
+                                    <Expand />
+                                </TableHead>
+                            }
+                            {adjustedColumns.map((col, index) => (
+                                <TableHead style={{
+                                    width: `${col.width}px`
+                                }} key={index}>{col.label}</TableHead>
                             ))}
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {isLoading ?
-                            <TableCell colSpan={columns.length + 2}>
-                                <div className="w-full flex justify-center items-center p-5">
-                                    <LoadingSpinner />
-                                </div>
-                            </TableCell>
+                            <TableRow>
+                                <TableCell colSpan={columns.length + 2}>
+                                    <div className="w-full flex justify-center items-center p-5">
+                                        <LoadingSpinner />
+                                    </div>
+                                </TableCell>
+                            </TableRow>
                             :
                             dataSource.map((record: RecordWithAnyValue, index: number) => (
                                 <Fragment key={index}>
@@ -77,7 +102,7 @@ const BaseTable = ({
                                             (index % 2 === 0 ? "bg-slate-50 dark:bg-slate-900/40" : "bg-white dark:bg-slate-900/60")
                                         }
                                     >
-                                        {renderExpanded && <TableCell>
+                                        {renderExpanded && <TableCell className="w-[25px]">
                                             <button
                                                 aria-label={isOpen ? 'Collapse row' : 'Expand row'}
                                                 onClick={() => toggleRow(rowKey)}

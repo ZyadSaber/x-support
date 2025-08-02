@@ -8,25 +8,32 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getUserFromToken();
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { id: userId } = user;
+    // if (!user) {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // }
 
     const {
       ticket_id,
-      record_status,
-      ticket_date,
-      ticket_description,
       ticket_name,
       ticket_status,
+      client_id,
+      ticket_date,
+      ticket_end_date,
+      ticket_description,
+      submitted_by,
+      support_agent,
+      web_developer,
+      oracle_developer,
+      files,
+      record_status,
     } = await request.json();
 
-    // const;
     const ticketsCount = await prisma.ticketsData.count({
       where: {
-        ticket_date: getParamDateRange(),
+        ticket_date: {
+          gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          lte: new Date(new Date().setHours(23, 59, 0, 0)),
+        },
       },
     });
 
@@ -40,19 +47,16 @@ export async function POST(request: NextRequest) {
           ticket_id: currentTicketSerial,
           ticket_name,
           ticket_description,
-          ticket_date,
-          submitted_by: userId,
+          ticket_date: new Date(ticket_date),
+          ticket_end_date: ticket_end_date
+            ? new Date(ticket_end_date || "")
+            : undefined,
+          submitted_by,
           ticket_status,
-          //   client_name,
-          //   server_name,
-          //   anydesk_number,
-          //   anydesk_password,
-          //   server_user_name,
-          //   user_name_password,
-          //   database_user_name,
-          //   database_password,
-          //   last_user_access: userId,
-          //   user_updated_by: userId,
+          client_id,
+          support_agent,
+          web_developer,
+          oracle_developer,
         },
       });
     } else if (record_status === "u") {
@@ -61,15 +65,16 @@ export async function POST(request: NextRequest) {
           ticket_id,
         },
         data: {
-          //   client_name,
-          //   server_name,
-          //   anydesk_number,
-          //   anydesk_password,
-          //   server_user_name,
-          //   user_name_password,
-          //   database_user_name,
-          //   database_password,
-          //   user_updated_by: userId,
+          ticket_name,
+          ticket_description,
+          ticket_date: new Date(ticket_date),
+          ticket_end_date: ticket_end_date,
+          submitted_by,
+          ticket_status,
+          client_id,
+          support_agent,
+          web_developer,
+          oracle_developer,
         },
       });
     } else if (record_status === "d") {
