@@ -14,7 +14,7 @@ import InputText from "@/components/input-text";
 import TextAreaView from "@/components/text-area";
 import { RecordWithAnyValue } from "@/interfaces/global";
 import ModalView from "./ModalView"
-import { COLUMNS, statusOptions, initialValues } from "../constants"
+import { COLUMNS, statusOptionsSearch, initialValues } from "../constants"
 
 interface TicketViewProps {
     id?: string;
@@ -41,6 +41,17 @@ const TicketView = ({ id }: TicketViewProps) => {
         initialValues
     })
 
+    const handleCloseTicket = useCallback((ticketId) => async () => {
+        try {
+            await api.post("tickets/close_ticket", {
+                ticket_id: ticketId,
+            });
+            fetchTableData()
+        } catch (err) {
+            console.log(err)
+        }
+    }, [fetchTableData])
+
     const renderExpanded = useCallback(({
         ticket_date,
         ticket_end_date,
@@ -51,7 +62,9 @@ const TicketView = ({ id }: TicketViewProps) => {
         web_developer_name,
         oracle_developer_name,
         ticket_status_name,
-        ticket_description
+        ticket_description,
+        ticket_id,
+        ticket_status
     }) => (
         <div className="flex flex-wrap gap-2 w-full items-end">
             <InputText
@@ -79,7 +92,7 @@ const TicketView = ({ id }: TicketViewProps) => {
                 disabled
             />
             <Button className="cursor-pointer">Download Files</Button>
-            <Button variant="destructive" className="cursor-pointer">Close Ticket</Button>
+            <Button variant="destructive" className="cursor-pointer" disabled={ticket_status === "C"} onClick={handleCloseTicket(ticket_id)}>Close Ticket</Button>
             <InputText
                 className="w-[19%]"
                 label="Submitted by"
@@ -118,7 +131,7 @@ const TicketView = ({ id }: TicketViewProps) => {
                 disabled
             />
         </div>
-    ), [])
+    ), [handleCloseTicket])
 
     const handleShowItem = useCallback((type: string) => (record?: RecordWithAnyValue) => {
         if (type === "N") {
@@ -195,7 +208,7 @@ const TicketView = ({ id }: TicketViewProps) => {
                         onChange={handleChange}
                     />
                     <RadioGroupButton
-                        options={statusOptions}
+                        options={statusOptionsSearch}
                         name="ticket_status"
                         value={ticket_status}
                         onChange={handleChange}

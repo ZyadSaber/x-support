@@ -8,9 +8,9 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getUserFromToken();
 
-    // if (!user) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const {
       ticket_id,

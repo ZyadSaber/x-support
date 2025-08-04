@@ -11,7 +11,7 @@ export const initialValues = {
   ticket_id: "",
   date: getCustomDateRange(15),
   client_name: "",
-  ticket_status: "O",
+  ticket_status: "",
   client_id: "",
 };
 
@@ -57,4 +57,9 @@ export const statusOptions = [
     label: "Closed",
     key: "C",
   },
+];
+
+export const statusOptionsSearch = [
+  ...statusOptions,
+  { label: "All", key: "" },
 ];

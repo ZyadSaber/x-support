@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     const {
       record_status,
-      client_name,
+      client_id,
       server_name,
       anydesk_number,
       anydesk_password,
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     if (record_status === "n") {
       await prisma.clientsServerData.create({
         data: {
-          client_name,
+          client_id,
           server_name,
           anydesk_number,
           anydesk_password,
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
           id,
         },
         data: {
-          client_name,
+          client_id,
           server_name,
           anydesk_number,
           anydesk_password,

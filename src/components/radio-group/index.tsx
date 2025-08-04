@@ -13,6 +13,7 @@ interface RadioGroupButtonProps {
     value: string;
     name: string;
     options: OptionType[]
+    disabled?: boolean
 }
 
 const RadioGroupButton = ({
@@ -20,7 +21,8 @@ const RadioGroupButton = ({
     options,
     name,
     onChange,
-    value
+    value,
+    disabled
 }: RadioGroupButtonProps) => {
 
     const handleChange = useCallback((event) => {
@@ -28,7 +30,7 @@ const RadioGroupButton = ({
     }, [name, onChange])
 
     return (
-        <RadioGroup className="flex items-center mb-1.5">
+        <RadioGroup className="flex items-center mb-1.5" disabled={disabled}>
             <Label htmlFor="option-one" className="text-[18px]">{`${label}:`}</Label>
             {
                 options.map(({ label, key }, index) => (

@@ -15,6 +15,11 @@ export async function GET() {
     const responseData = await prisma.clientsServerData.findMany({
       where: {},
       include: {
+        client: {
+          select: {
+            client_name: true,
+          },
+        },
         updated_user: {
           select: {
             name: true,
@@ -31,7 +36,7 @@ export async function GET() {
     const computedData = responseData.map((record) => {
       const {
         id,
-        client_name,
+        client_id,
         server_name,
         anydesk_number,
         anydesk_password,
@@ -43,10 +48,12 @@ export async function GET() {
         updatedAt,
         user,
         updated_user,
+        client,
       } = record;
       return {
         id,
-        client_name,
+        client_id,
+        client_name: client?.client_name,
         server_name,
         anydesk_number,
         anydesk_password,

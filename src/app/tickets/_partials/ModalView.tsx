@@ -50,7 +50,7 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
 
     const handleSave = useCallback(async () => {
         try {
-            await api.post("client_server/post_data", {
+            await api.post("tickets/post_client_ticket", {
                 ticket_id,
                 ticket_name,
                 ticket_status,
@@ -72,6 +72,8 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
         }
     }, [client_id, files, handleClose, oracle_developer, record_status, runQuery, submitted_by, support_agent, ticket_date, ticket_description, ticket_end_date, ticket_id, ticket_name, ticket_status, web_developer])
 
+    const isClosedTicket = ticket_status === "C"
+
     return (
         <Modal
             isOpen={isOpen}
@@ -84,6 +86,7 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     name="ticket_name"
                     value={ticket_name}
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                     label="Ticket name"
                     className="w-[33%]"
                 />
@@ -94,12 +97,14 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     endPoint="clients/get_clients_list"
                     value={client_id}
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                 />
                 <RadioGroupButton
                     options={statusOptions}
                     name="ticket_status"
                     value={ticket_status}
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                     label="Ticket status"
                 />
                 <QuerySelect
@@ -118,6 +123,7 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     endPoint="users/get_users_list"
                     value={support_agent}
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                 />
                 <QuerySelect
                     label="Web developer"
@@ -126,6 +132,7 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     endPoint="users/get_users_list"
                     value={web_developer}
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                 />
                 <QuerySelect
                     label="Oracle developer"
@@ -134,12 +141,14 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     endPoint="users/get_users_list"
                     value={oracle_developer}
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                 />
                 <DatePicker
                     name="ticket_date"
                     value={ticket_date}
                     label="Ticket Date"
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                     className="w-[23.5%]"
                 />
                 <DatePicker
@@ -147,8 +156,8 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     value={ticket_end_date}
                     label="Ticket end Date"
                     onChange={handleChange}
+                    disabled
                     className="w-[23.5%]"
-                    disabled={ticket_status !== "C"}
                 />
                 <InputText
                     className="w-[48%]"
@@ -163,6 +172,7 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     value={ticket_description}
                     name="ticket_description"
                     onChange={handleChange}
+                    disabled={isClosedTicket}
                     className="w-full"
                     label="Ticket description"
                     minHeight="120px"

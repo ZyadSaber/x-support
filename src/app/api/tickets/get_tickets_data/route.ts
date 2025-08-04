@@ -36,7 +36,9 @@ export async function GET(request: NextRequest) {
     const responseData = await prisma.ticketsData.findMany({
       where: {
         ...where,
-        ticket_status,
+        ticket_status: {
+          contains: ticket_status,
+        },
         ticket_id: {
           contains: ticket_id,
         },

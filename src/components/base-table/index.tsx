@@ -30,22 +30,12 @@ const BaseTable = ({
     renderExpanded
 }: BaseTableProps) => {
 
-    const [expanded, setExpanded] = useState<Set<string | number>>(new Set());
-
-    const toggleRow = useCallback((key: string | number) => {
-        setExpanded((prev) => {
-            const next = new Set(prev);
-            if (next.has(key)) {
-                next.delete(key);
-            } else {
-                next.add(key);
-            }
-            return next;
-        });
-    }, []);
-
-    const isOpen = expanded.has(rowKey);
+    const [expanded, setExpanded] = useState<number | string>(undefined);
     const [ref, rect] = useBoundingClientRef();
+
+    const toggleRow = useCallback((key: string | number) => () => {
+        setExpanded(prev => prev === key ? undefined : key);
+    }, []);
 
     const showExpandColumn = !!renderExpanded;
     // const showActionColumn = !!onPressActionIcon;
@@ -104,11 +94,11 @@ const BaseTable = ({
                                     >
                                         {renderExpanded && <TableCell className="w-[25px]">
                                             <button
-                                                aria-label={isOpen ? 'Collapse row' : 'Expand row'}
-                                                onClick={() => toggleRow(rowKey)}
+                                                aria-label={record[rowKey] === expanded ? 'Collapse row' : 'Expand row'}
+                                                onClick={toggleRow(record[rowKey])}
                                                 className="w-full flex justify-center items-center"
                                             >
-                                                {isOpen ? <ChevronDown /> : <ChevronRight />}
+                                                {record[rowKey] === expanded ? <ChevronDown /> : <ChevronRight />}
                                             </button>
                                         </TableCell>}
                                         {columns.map((col, index) => (
@@ -132,7 +122,7 @@ const BaseTable = ({
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                    {isOpen && (
+                                    {record[rowKey] === expanded && (
                                         <TableRow>
                                             <TableCell colSpan={columns.length + 2} className="pr-7 pl-7 pt-3 pb-3 ">
                                                 {renderExpanded(record)}
