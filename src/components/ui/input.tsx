@@ -5,7 +5,7 @@ interface InputProps extends ComponentProps<"input"> {
   value?: string
 }
 
-const Input = ({ className, type, value, ...props }: InputProps) => {
+const Input = ({ className, type, value, ...props }: ComponentProps<"input">) => {
   return (
     <input
       type={type}
@@ -18,7 +18,7 @@ const Input = ({ className, type, value, ...props }: InputProps) => {
           className
         )
       }
-      value={value || ""}
+      value={value || undefined}
       {...props}
     />
   )

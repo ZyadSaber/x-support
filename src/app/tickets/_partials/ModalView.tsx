@@ -4,6 +4,7 @@ import useFormManager from "@/hooks/useFormManager"
 import api from "@/lib/axios";
 import { RecordWithAnyValue } from "@/interfaces/global"
 import QuerySelect from "@/components/query-select"
+import FileUpload from "@/components/file-upload"
 import { modalTitle, statusOptions } from "../constants"
 import Modal from "@/components/modal"
 import InputText from "@/components/input-text"
@@ -36,7 +37,8 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
             web_developer,
             oracle_developer,
             files,
-            record_status
+            record_status,
+            ticket_file
         },
         handleChange
     } = useFormManager({
@@ -63,14 +65,15 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                 web_developer,
                 oracle_developer,
                 files,
-                record_status
+                record_status,
+                ticket_file
             });
             handleClose()
             runQuery()
         } catch (err) {
             console.log(err)
         }
-    }, [client_id, files, handleClose, oracle_developer, record_status, runQuery, submitted_by, support_agent, ticket_date, ticket_description, ticket_end_date, ticket_id, ticket_name, ticket_status, web_developer])
+    }, [client_id, files, ticket_file, handleClose, oracle_developer, record_status, runQuery, submitted_by, support_agent, ticket_date, ticket_description, ticket_end_date, ticket_id, ticket_name, ticket_status, web_developer])
 
     const isClosedTicket = ticket_status === "C"
 
@@ -159,14 +162,13 @@ const ModalView = ({ selectedRecord, isOpen, type, handleClose, runQuery }: Moda
                     disabled
                     className="w-[23.5%]"
                 />
-                <InputText
+                <FileUpload
                     className="w-[48%]"
                     label="Upload Files"
-                    value={files}
-                    name="files"
+                    name="ticket_file"
                     onChange={handleChange}
-                    type="file"
-                    disabled
+                    disabled={isClosedTicket}
+                    dir="ticketsFiles"
                 />
                 <TextAreaView
                     value={ticket_description}

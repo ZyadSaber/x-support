@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/auth";
 import { format } from "date-fns";
-import getParamDateRange from "@/lib/getParamDateRange";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +23,7 @@ export async function POST(request: NextRequest) {
       support_agent,
       web_developer,
       oracle_developer,
-      files,
+      ticket_file,
       record_status,
     } = await request.json();
 
@@ -57,6 +56,7 @@ export async function POST(request: NextRequest) {
           support_agent,
           web_developer,
           oracle_developer,
+          ticket_file,
         },
       });
     } else if (record_status === "u") {
@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
           support_agent,
           web_developer,
           oracle_developer,
+          ticket_file,
         },
       });
     } else if (record_status === "d") {

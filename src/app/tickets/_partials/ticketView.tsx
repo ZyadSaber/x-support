@@ -13,6 +13,7 @@ import DatePickerRange from "@/components/ui/datePickerRange"
 import InputText from "@/components/input-text";
 import TextAreaView from "@/components/text-area";
 import { RecordWithAnyValue } from "@/interfaces/global";
+import DownloadButton from "@/components/download-button"
 import ModalView from "./ModalView"
 import { COLUMNS, statusOptionsSearch, initialValues } from "../constants"
 
@@ -64,7 +65,8 @@ const TicketView = ({ id }: TicketViewProps) => {
         ticket_status_name,
         ticket_description,
         ticket_id,
-        ticket_status
+        ticket_status,
+        ticket_file_url
     }) => (
         <div className="flex flex-wrap gap-2 w-full items-end">
             <InputText
@@ -91,7 +93,7 @@ const TicketView = ({ id }: TicketViewProps) => {
                 value={updated_at}
                 disabled
             />
-            <Button className="cursor-pointer">Download Files</Button>
+            <DownloadButton className="cursor-pointer" url={ticket_file_url} disabled={!ticket_file_url || ticket_status === "C"} />
             <Button variant="destructive" className="cursor-pointer" disabled={ticket_status === "C"} onClick={handleCloseTicket(ticket_id)}>Close Ticket</Button>
             <InputText
                 className="w-[19%]"

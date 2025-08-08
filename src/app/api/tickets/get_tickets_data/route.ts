@@ -105,7 +105,10 @@ export async function GET(request: NextRequest) {
           : undefined,
         updated_at: format(updatedAt, "yyyy-MM-dd hh:mm"),
         created_at: format(createdAt, "yyyy-MM-dd hh:mm"),
-        ticket_file,
+        ticket_file_url: ticket_file
+          ? //http://localhost:3000/api/auth/download_files?filename=uploads/ticketsFiles/250809-000867.png
+            `/auth/download_files?filename=${ticket_file}`
+          : "",
         submitted_by,
         submitted_by_name: submitted_user?.name,
         support_agent,
