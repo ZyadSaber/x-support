@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getUserFromToken } from "@/lib/auth";
-import { getStatusName } from "@/lib/getStatusName";
 import getRouteParams from "@/lib/getRouteParams";
+import { throwError, validateUser, getStatusName } from "@/lib/apiHandlers";
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
 import getParamDateRange from "@/lib/getParamDateRange";
@@ -9,11 +8,6 @@ import { RecordWithAnyValue } from "@/interfaces/global";
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getUserFromToken();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
     const { date_from, date_to, client_id, ticket_id, ticket_status, id } =
       getRouteParams(request);
 
@@ -124,14 +118,10 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json({
+    return validateUser({
       data: computedData,
     });
   } catch (error) {
-    console.error("Get user error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    throwError(error);
   }
 }

@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { format } from "date-fns";
 import { getUserFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { format } from "date-fns";
+import getRouteParams from "@/lib/getRouteParams";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const user = await getUserFromToken();
 
@@ -11,9 +12,17 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { client_name } = getRouteParams(request);
+
     // Fetch last_login_time from DB
     const responseData = await prisma.clientsServerData.findMany({
-      where: {},
+      where: {
+        client: {
+          client_name: {
+            contains: client_name,
+          },
+        },
+      },
       include: {
         client: {
           select: {
@@ -49,6 +58,7 @@ export async function GET() {
         user,
         updated_user,
         client,
+        createdAt,
       } = record;
       return {
         id,
@@ -63,6 +73,7 @@ export async function GET() {
         database_password,
         last_user_access,
         updated_at: format(updatedAt || new Date(), "yyyy-MM-dd hh:mm"),
+        created_at: format(createdAt || new Date(), "yyyy-MM-dd hh:mm"),
         last_user_access_name: user?.name,
         user_updated_by_name: updated_user?.name,
       };

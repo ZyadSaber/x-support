@@ -34,7 +34,6 @@ const AuthProvider = ({
         },
     });
 
-    // Redirect to root if not authenticated, but only on non-root pages
     useEffect(() => {
         if (pathname !== '/' && !authLoading && !user) {
             router.push('/');
@@ -45,50 +44,46 @@ const AuthProvider = ({
         (response: RecordWithAnyValue | unknown, error: unknown) => {
             if (error) {
                 const axiosError = error as AxiosError;
-                if (axiosError.response?.status === 401) {
-                    handleChange("user", null);
-                    handleChangeMultiInputs({
-                        user: null,
-                    });
-                } else {
-                    handleChangeMultiInputs({
-                        error:
-                            (axiosError.response?.data as ErrorResponse)?.error ||
-                            axiosError.message ||
-                            "An error occurred",
-                        user: null,
-                    });
-                }
+                handleChangeMultiInputs({
+                    error:
+                        (axiosError.response?.data as ErrorResponse)?.error ||
+                        axiosError.message ||
+                        "An error occurred",
+                    user: null,
+                    authLoading: false
+                });
             } else {
                 handleChange("user", (response as RecordWithAnyValue)?.user);
+                handleChangeMultiInputs({
+                    user: (response as RecordWithAnyValue)?.user,
+                    authLoading: false
+                })
             }
-            handleChange("authLoading", false);
         },
         [handleChange, handleChangeMultiInputs]
     );
 
-    const { runQuery } = useFetch({
+    const { runQuery, isLoading } = useFetch({
         endpoint: "auth/me",
         callOnFirstRender: true,
         onResponse: handleUserResponse,
     });
 
-    // Don't render children if not authenticated and not on root
     useEffect(() => {
         if (pathname === '/' && user && !authLoading) {
             router.push('/home')
         }
     }, [authLoading, pathname, router, user])
 
-    if (authLoading) {
+    const disableLogin = authLoading || (pathname === '/' && user) || isLoading
+
+    if (disableLogin) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
                 <LoadingSpinner />
             </div>
         );
     }
-
-    const disableLogin = authLoading || user
 
     return (
         <AuthProviderContext.Provider value={{

@@ -151,11 +151,6 @@ const TicketView = ({ id }: TicketViewProps) => {
                 },
                 type
             })
-        } else if (type === "S") {
-            handleChangeMultiInputs({
-                selectedRecord: record,
-                type
-            })
         }
         handleOpen()
     }, [handleChangeMultiInputs, handleOpen])
@@ -231,13 +226,13 @@ const TicketView = ({ id }: TicketViewProps) => {
                     handleDelete={handleDelete}
                 />
             </main>
-            <ModalView
+            {isOpen && <ModalView
                 isOpen={isOpen}
                 selectedRecord={selectedRecord}
                 type={type}
                 handleClose={handleClose}
                 runQuery={fetchTableData}
-            />
+            />}
         </div>
     )
 }

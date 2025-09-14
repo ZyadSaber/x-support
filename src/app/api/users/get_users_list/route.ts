@@ -1,16 +1,9 @@
-import { NextResponse, NextRequest } from "next/server";
-import { getUserFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import generateListData from "@/lib/generateListData";
+import { throwError, validateUser } from "@/lib/apiHandlers";
 
 export async function GET() {
   try {
-    const user = await getUserFromToken();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const prismaData = await prisma.user.findMany({
       select: {
         id: true,
@@ -18,14 +11,10 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(
+    return validateUser(
       generateListData(prismaData, { key: "id", value: "name" })
     );
   } catch (error) {
-    console.error("Get user error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    throwError(error);
   }
 }

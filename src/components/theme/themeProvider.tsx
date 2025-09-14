@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { type Theme, getTheme, setTheme } from "@/lib/theme";
 import { ThemeProviderContext } from "./constants"
 import { ThemeProviderProps } from "./interface"
@@ -12,7 +11,6 @@ const ThemeProvider = ({
     storageKey = "theme",
     ...props
 }: ThemeProviderProps) => {
-    const pathname = usePathname();
 
     useEffect(() => {
         const savedTheme = localStorage.getItem(storageKey) as Theme | null;

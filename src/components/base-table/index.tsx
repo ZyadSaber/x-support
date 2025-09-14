@@ -103,7 +103,7 @@ const BaseTable = ({
                                         </TableCell>}
                                         {columns.map((col, index) => (
                                             <TableCell key={index}>
-                                                {isLoading ? <span className="block h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded animate-pulse" /> : record[col.dataIndex]}
+                                                {isLoading ? <span className="block h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded animate-pulse" /> : record[col.dataIndex]?.toString()}
                                             </TableCell>
                                         ))}
                                         <TableCell>
@@ -122,7 +122,7 @@ const BaseTable = ({
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                    {record[rowKey] === expanded && (
+                                    {renderExpanded && record[rowKey] === expanded && (
                                         <TableRow>
                                             <TableCell colSpan={columns.length + 2} className="pr-7 pl-7 pt-3 pb-3 ">
                                                 {renderExpanded(record)}

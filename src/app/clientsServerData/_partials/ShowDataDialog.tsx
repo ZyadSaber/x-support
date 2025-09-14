@@ -11,7 +11,7 @@ import Modal from "@/components/modal"
 interface ShowDataDialogProps {
     selectedRecord: RecordWithAnyValue;
     isOpen: boolean;
-    type: "N" | "U" | "S";
+    type: "N" | "U";
     handleClose: () => void;
     runQuery: () => void
 }
@@ -37,7 +37,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
         initialValues: selectedRecord
     })
 
-    const showFiledData = type !== "S"
 
 
     const handleSave = useCallback(async () => {
@@ -75,7 +74,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="Client name"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="server_name"
@@ -83,7 +81,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="Server name"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="anydesk_number"
@@ -91,7 +88,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="AnyDesk number"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="anydesk_password"
@@ -99,7 +95,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="AnyDesk Password"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="server_user_name"
@@ -107,7 +102,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="Server user name"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="user_name_password"
@@ -115,7 +109,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="Server password"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="database_user_name"
@@ -123,7 +116,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="Database user name"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
                 <InputText
                     name="database_password"
@@ -131,7 +123,6 @@ const ShowDataDialog = ({ selectedRecord, isOpen, type, handleClose, runQuery }:
                     onChange={handleChange}
                     label="Database password"
                     className="w-[48%]"
-                    disabled={!showFiledData}
                 />
             </div>
         </Modal>
